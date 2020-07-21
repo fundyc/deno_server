@@ -1,0 +1,7 @@
+curl http://0.0.0.0:8080/hola
+###
+curl  http://0.0.0.0:8080/hola -b 'env=dev'
+###
+curl http://0.0.0.0:8080/hola -b 'env=test'
+###
+curl http://0.0.0.0:8080/hola -b 'env=acc'
