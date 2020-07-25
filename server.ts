@@ -1,6 +1,24 @@
 import { Server, Router } from "https://deno.land/x/http_wrapper@v0.5.0/mod.ts";
 import { exists, readJson } from "https://deno.land/std@0.61.0/fs/mod.ts";
 
+import * as log from "https://deno.land/std@0.61.0/log/mod.ts";
+
+const debug = Deno.args[0];
+if (debug && debug.toUpperCase() === "DEBUG") {
+  await log.setup({
+    handlers: {
+      default: new log.handlers.ConsoleHandler('DEBUG'),
+    },
+
+    loggers: {
+      default: {
+        level: "DEBUG",
+        handlers: ["default"],
+      },
+    },
+  });
+}
+
 const router = new Router();
 router.get("/", async (req) => {
   req.respond({
@@ -19,19 +37,19 @@ router.get("/{name}", async (req, { param }) => {
   const env = env_cookie ? env_cookie : "dev";
   const file = "./config/" + env + "_" + param.name + ".json";
   const file_default= "./config/" + env + ".json";
-  //console.log(env_cookie + " : " + env + " : " + file);
+  log.debug("env_cookie = " + env_cookie + " | env = " + env + " | file = " + file);
 
   let body;
   if (await exists(file_default)) {
     body = await readJson(file_default);
-    //console.log(body);
+    log.debug("default = " + JSON.stringify(body));
   }
 
   if (await exists(file)) {
     const body_file = await readJson(file);
-    //console.log(body_file);
+    log.debug(param.name + " = " + JSON.stringify(body_file));
     Object.assign(body, body_file);
-    //console.log(body);
+    log.debug("composed = " + JSON.stringify(body));
   }
  
   if (body) {
@@ -44,7 +62,7 @@ router.get("/{name}", async (req, { param }) => {
     });
   } else {
     body = {error: "File not found"};
-    console.log(body);
+    log.debug(body);
 
     req.respond({
       status: 404,
@@ -57,4 +75,4 @@ export const app = new Server();
 app.use(router.routes);
 app
   .start({ port: 8080 })
-  .then((config) => console.log("Server running on localhost:${config.port}"));
+  .then((config) => log.info("Server running on localhost:"+config.port));

@@ -1,7 +1,17 @@
-curl http://0.0.0.0:8080/hola
+curl http://0.0.0.0:8080/mobile
 ###
-curl  http://0.0.0.0:8080/hola -b 'env=dev'
+curl http://0.0.0.0:8080/web
 ###
-curl http://0.0.0.0:8080/hola -b 'env=test'
+curl http://0.0.0.0:8080/ios
 ###
-curl http://0.0.0.0:8080/hola -b 'env=acc'
+curl  http://0.0.0.0:8080/mobile -b 'env=dev'
+###
+curl http://0.0.0.0:8080/web -b 'env=dev'
+###
+curl http://0.0.0.0:8080/mobile -b 'env=test'
+###
+curl http://0.0.0.0:8080/web -b 'env=test'
+###
+curl http://0.0.0.0:8080/ios -b 'env=test'
+###
+curl http://0.0.0.0:8080/mobile -b 'env=acc'

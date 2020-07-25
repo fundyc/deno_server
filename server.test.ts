@@ -1,6 +1,6 @@
 import { assert } from "https://deno.land/std@0.61.0/testing/asserts.ts";
 import { app } from './server.ts';
-import { runBenchmarks, bench } from "https://deno.land/std/testing/bench.ts";
+import { runBenchmarks, bench } from "https://deno.land/std@0.61.0/testing/bench.ts";
 import api from 'https://deno.land/x/api/index.ts'
 
 Deno.test('Default config', async () => {
@@ -9,7 +9,7 @@ Deno.test('Default config', async () => {
     assert(res.name);
 })
 
-Deno.test('Default config 100 times', async () => {
+Deno.test('Default config 1000 times', async () => {
     app;
     let res = {name: null};
     bench({
