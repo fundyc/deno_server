@@ -1,5 +1,5 @@
 # deno_server
-A server that returns config file by environment and name composing them.
+A server that returns config file by composing environment (cookie) and device (path_param) files.
 
 ## Install deno:
 ```

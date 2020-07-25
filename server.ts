@@ -1,6 +1,5 @@
 import { Server, Router } from "https://deno.land/x/http_wrapper@v0.5.0/mod.ts";
 import { exists, readJson } from "https://deno.land/std@0.61.0/fs/mod.ts";
-
 import * as log from "https://deno.land/std@0.61.0/log/mod.ts";
 
 const debug = Deno.args[0];
