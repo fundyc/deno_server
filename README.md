@@ -33,3 +33,28 @@ Ctrl-c to kill the server
 deno test -A --unstable
 ```
 Ctrl-c to kill the server
+
+## Make your docker image
+```
+docker build -t deno-server .
+```
+
+## View your docker images
+```
+docker images
+```
+
+## Run your docker image in a container (Can be closed with ctrl-c)
+```
+docker run --name deno-server --rm --init -p 8080:8080 deno-server
+```
+
+## View your docker containers
+```
+docker ps -a
+```
+
+## Remove your old docker images and containers not used
+```
+docker system prune
+```

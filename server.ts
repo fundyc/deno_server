@@ -1,6 +1,6 @@
-import { Server, Router } from "https://deno.land/x/http_wrapper@v0.5.0/mod.ts";
-import { exists, readJson } from "https://deno.land/std@0.61.0/fs/mod.ts";
-import * as log from "https://deno.land/std@0.61.0/log/mod.ts";
+import { Server, Router } from './deps.ts';
+import { exists, readJson } from "./deps.ts";
+import { log } from "./deps.ts";
 
 const debug = Deno.args[0];
 if (debug && debug.toUpperCase() === "DEBUG") {
@@ -26,7 +26,7 @@ router.get("/", async (req) => {
       "content-type": "application/json",
     }),
     body: JSON.stringify({
-      test: "This is a test",
+      test: "This is a test.",
     }),
   });
 });

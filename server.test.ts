@@ -1,24 +1,24 @@
-import { assert } from "https://deno.land/std@0.61.0/testing/asserts.ts";
+import { assert } from "./deps.test.ts";
 import { app } from './server.ts';
-import { runBenchmarks, bench } from "https://deno.land/std@0.61.0/testing/bench.ts";
-import api from 'https://deno.land/x/api/index.ts'
+import { runBenchmarks, bench } from "./deps.test.ts";
+import { soxa } from './deps.test.ts'
 
-Deno.test('Default config', async () => {
+Deno.test('Web config', async () => {
     app;
-    const res = await api.get('http://0.0.0.0:8080/hola');
-    assert(res.name);
+    const res = await soxa.get('http://0.0.0.0:8080/web');
+    assert(res.data.name);
 })
 
-Deno.test('Default config 1000 times', async () => {
+Deno.test('Web config 100 times', async () => {
     app;
-    let res = {name: null};
+    let res;
     bench({
-        name: 'call hola 1000 times',
-        runs: 1000,
+        name: 'call for default config 1000 times',
+        runs: 100,
         async func(b): Promise<void> {
             b.start();
-            res = await api.get('http://0.0.0.0:8080/hola');
-            assert(res);
+            res = await soxa.get('http://0.0.0.0:8080/web');
+            assert(res.data.name);
             b.stop();
         }
     })
