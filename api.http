@@ -1,3 +1,5 @@
+curl http://0.0.0.0:8080/healthy
+###
 curl http://0.0.0.0:8080/mobile
 ###
 curl http://0.0.0.0:8080/web

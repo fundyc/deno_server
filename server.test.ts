@@ -3,6 +3,12 @@ import { app } from './server.ts';
 import { runBenchmarks, bench } from "./deps.test.ts";
 import { soxa } from './deps.test.ts'
 
+Deno.test('Healthy server', async () => {
+    app;
+    const res = await soxa.get('http://0.0.0.0:8080/healthy');
+    assertStrictEquals(res.data.status, 'OK');
+})
+
 Deno.test('Default dev config', async () => {
     app;
     const res = await soxa.get('http://0.0.0.0:8080/default');

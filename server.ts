@@ -19,14 +19,16 @@ if (debug && debug.toUpperCase() === "DEBUG") {
 }
 
 const router = new Router();
-router.get("/", async (req) => {
+router.get("/healthy", async (req) => {
   req.respond({
     status: 200,
     headers: new Headers({
       "content-type": "application/json",
     }),
     body: JSON.stringify({
-      test: "This is a test.",
+      status: "OK",
+      desription: "Server is up and running.",
+      version: "1.0.0"
     }),
   });
 });
