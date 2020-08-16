@@ -34,6 +34,7 @@ deno test -A --unstable
 ```
 Ctrl-c to kill the server
 
+# Docker stuff
 ## Make your docker image
 ```
 docker build -t deno-server .
@@ -57,4 +58,94 @@ docker ps -a
 ## Remove your old docker images and containers not used
 ```
 docker system prune
+```
+# Kubernetes stuff
+## Local Registry Server
+### Create a local registry server and push the deno-server image
+```
+docker run -d -p 5000:5000 --name registry registry:2
+docker image tag deno-server localhost:5000/deno-server
+docker push localhost:5000/deno-server
+```
+
+### Delete a local registry server
+```
+docker container stop registry && docker container rm -v registry
+```
+
+## Pods
+### Create a kubernetes pod with a container with a local deno-server image
+```
+kubectl run deno-server --generator=run-pod/v1 --image=deno-server
+```
+
+### Create a kubernetes pod with a container with a deno-server image in a local registry server (needed to be created) through a yaml file (server-pod.yaml)
+```
+kubectl apply -f server-pod.yaml
+kubectl port-forward deno-server 8080:8080   (Service isn't needed)
+```
+
+### View kubernetes pods
+```
+kubectl get pods
+```
+
+### View a kubernetes pod status
+```
+kubectl describe pod deno-server
+```
+
+### Delete a kubernetes pod
+```
+kubectl delete pod deno-server
+```
+
+## Services
+### Expose a kubernetes pod in a service so port forward is not needed
+```
+kubectl expose pod deno-server --type LoadBalancer --port=8080 --target-port=8080
+```
+
+### View a kubernetes service to see the nodePort where you can access the server
+```
+kubectl get service
+```
+
+### Delete a kubernetes service
+```
+kubectl delete service deno-server
+```
+
+## ReplicaSets
+### Create a kubernetes deployment with a service through a yaml file (server-deployment.yaml)
+```
+kubectl apply -f server-replicaset.yaml
+```
+
+### View a kubernetes deployment to see the nodePort where you can access the server
+```
+kubectl get replicaset
+```
+
+### Delete a kubernetes replicaset and service
+```
+kubectl delete service deno-server-service
+kubectl delete replicaset deno-server-replicaset
+```
+
+## Deployments
+### Create a kubernetes deployment with a service through a yaml file (server-deployment.yaml)
+```
+kubectl apply -f server-deployment.yaml
+```
+
+### View a kubernetes deployment to see the nodePort where you can access the server
+```
+kubectl get deployment
+```
+
+### Delete a kubernetes deployment and service
+```
+kubectl delete service deno-server-service
+kubectl delete deployment deno-server-deployment
 ```

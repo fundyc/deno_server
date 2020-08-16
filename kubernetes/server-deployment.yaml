@@ -1,0 +1,63 @@
+# This service is needed to expose the 8080 port outside of kubernetes
+apiVersion: v1
+kind: Service
+metadata:
+  name: deno-server-service
+spec:
+  selector:
+    app: deno-server
+  ports:
+  - protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+---
+# This deployment create a replicaSet with a 3 deno-server pods with more features than a replicaSet
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deno-server-deployment
+  labels:  #needed to create a service
+    app: deno-server
+    environment: uat
+    version: "1.0.0"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deno-server
+  template:
+    metadata:
+      name: deno-server
+      labels: 
+        app: deno-server
+    spec:
+      containers:
+        - image: localhost:5000/deno-server
+          name: deno-server
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: http
+            initialDelaySeconds: 5 #seconds waiting to check healthy first time
+            timeoutSeconds: 1
+            periodSeconds: 10 #seconds waiting to check healthy next time
+            failureThreshold: 3 #retries if checking healthy fails to mark as not live
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: http
+            timeoutSeconds: 1
+            periodSeconds: 2
+            successThreshold: 1 #checks healthy 1 times to mark as ready
+            failureThreshold: 3 #retries if checking healthy fails to mark as not ready
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+          ports:
+            - name: http
+              containerPort: 8080
