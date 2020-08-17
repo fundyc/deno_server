@@ -45,9 +45,9 @@ docker build -t deno-server .
 docker images
 ```
 
-## Run your docker image in a container (Can be closed with ctrl-c)
+## Run your docker image in a container with log level DEBUG passing a enviroment variable (Can be closed with ctrl-c)
 ```
-docker run --name deno-server --rm --init -p 8080:8080 deno-server
+docker run --name deno-server --rm --init -p 8080:8080 -e "LOG_LEVEL=DEBUG" deno-server
 ```
 
 ## View your docker containers
@@ -81,6 +81,7 @@ kubectl run deno-server --generator=run-pod/v1 --image=deno-server
 
 ### Create a kubernetes pod with a container with a deno-server image in a local registry server (needed to be created) through a yaml file (server-pod.yaml)
 ```
+cd kubernetes
 kubectl apply -f server-pod.yaml
 kubectl port-forward deno-server 8080:8080   (Service isn't needed)
 ```
@@ -98,6 +99,17 @@ kubectl describe pod deno-server
 ### Delete a kubernetes pod
 ```
 kubectl delete pod deno-server
+```
+
+## Logs
+### View logs by pod
+```
+kubectl logs -f deno-server
+```
+
+### View logs by tag app
+```
+kubectl logs -f -lapp=deno-server --all-containers=true
 ```
 
 ## Services
@@ -144,8 +156,14 @@ kubectl apply -f server-deployment.yaml
 kubectl get deployment
 ```
 
-### Delete a kubernetes deployment and service
+### Delete a kubernetes deployment, service and configMap
 ```
 kubectl delete service deno-server-service
 kubectl delete deployment deno-server-deployment
+kubectl delete configmap deno-server-configmap
+```
+
+### Delete a kubernetes deployment, service and configMap all together with a label
+```
+kubectl delete service,deployment,configmap -lapp=deno-server
 ```

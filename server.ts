@@ -2,8 +2,13 @@ import { Server, Router } from './deps.ts';
 import { exists, readJson } from "./deps.ts";
 import { log } from "./deps.ts";
 
-const debug = Deno.args[0];
+// Log level is selected by enviroment variable LOG_LEVEL or by first parameter
+let debug = Deno.env.get("LOG_LEVEL");
+if (Deno.args[0]) {
+  debug = Deno.args[0];
+}
 if (debug && debug.toUpperCase() === "DEBUG") {
+  log.info("log level = DEBUG");
   await log.setup({
     handlers: {
       default: new log.handlers.ConsoleHandler('DEBUG'),
@@ -18,6 +23,7 @@ if (debug && debug.toUpperCase() === "DEBUG") {
   });
 }
 
+// healthy endpoint used to know if the server is up and running
 const router = new Router();
 router.get("/healthy", async (req) => {
   req.respond({
@@ -33,6 +39,7 @@ router.get("/healthy", async (req) => {
   });
 });
 
+// return the json config file
 router.get("/{name}", async (req, { param }) => {
   const env_cookie = req.headers.get("cookie")?.replace(/(?:(?:^|.*;\s*)env\s*\=\s*([^;]*).*$)|^.*$/, "$1");
   const env = env_cookie ? env_cookie : "dev";
@@ -72,6 +79,7 @@ router.get("/{name}", async (req, { param }) => {
   }
 });
 
+// Run the server
 export const app = new Server();
 app.use(router.routes);
 app
