@@ -1,8 +1,20 @@
+# This configMap is used to show debug log
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: deno-server-configmap
+  labels:  #needed to create a service
+    app: deno-server
+data:
+  log_level: "DEBUG"
+---
 # This service is needed to expose the 8080 port outside of kubernetes
 apiVersion: v1
 kind: Service
 metadata:
   name: deno-server-service
+  labels:
+    app: deno-server
 spec:
   selector:
     app: deno-server
@@ -35,6 +47,12 @@ spec:
       containers:
         - image: localhost:5000/deno-server
           name: deno-server
+          env:
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: deno-server-configmap
+                  key: log_level
           livenessProbe:
             httpGet:
               path: /healthy
