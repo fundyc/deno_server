@@ -19,4 +19,4 @@ ADD server.ts .
 # Compile the main app so that it doesn't need to be compiled each startup/entry.
 RUN deno cache --unstable server.ts
 
-CMD ["run", "-A", "--unstable","server.ts"]
+CMD ["run", "--allow-env", "--allow-read", "--allow-net", "--unstable", "server.ts"]

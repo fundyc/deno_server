@@ -70,7 +70,7 @@ export PATH="/Users/cu47ek/.deno/bin:$PATH"
 
 ## Run server
 ```
-denon run -A --unstable server.ts debug
+denon run --allow-env --allow-read --allow-net --unstable server.ts debug
 ```
 Ctrl-c to kill the server
 
