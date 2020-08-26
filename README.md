@@ -222,14 +222,19 @@ kubectl apply -f server-deployment.yaml
 kubectl get deployment
 ```
 
+### View all the stuff form the kubernetes deployment 
+```
+kubectl get cm,svc,deploy,rs,po,ep -lapp=deno-server
+```
+
 ### Delete kubernetes deployment and service and configMap
 ```
+kubectl delete configmap deno-server-configmap
 kubectl delete service deno-server-service
 kubectl delete deployment deno-server-deployment
-kubectl delete configmap deno-server-configmap
 ```
 
 ### Delete kubernetes deployment and service and configMap all together with a label
 ```
-kubectl delete service,deployment,configmap -lapp=deno-server
+kubectl delete deploy,svc,cm -lapp=deno-server
 ```
